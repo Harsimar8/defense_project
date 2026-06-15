@@ -1,16 +1,26 @@
-<h2>Defense Assets</h2>
-<p>Component Loaded ✔</p>
+<h2>Defense Assets Management Grid</h2>
+<p>System Status: Secure ✔</p>
+
+<div *ngIf="maintenanceAlerts.length > 0" 
+     style="background: #fff3cd; border-left: 6px solid #ffc107; color: #856404; padding: 15px; margin-bottom: 20px; border-radius: 4px; font-family: sans-serif;">
+  <h3 style="margin-top: 0; color: #dc3545;">⚠️ CRITICAL SECURITY NOTICE: ASSETS OFFLINE</h3>
+  <p>The following systems require immediate operational attention or engineering maintenance:</p>
+  <ul>
+    <li *ngFor="let alert of maintenanceAlerts">
+      <strong>🚨 {{ alert.name }}</strong> ({{ alert.type }}) located in <em>{{ alert.location }}</em> is currently down.
+    </li>
+  </ul>
+</div>
+
+<h3>🌐 Command Center Geolocation Readiness Grid</h3>
+<div id="defenseMap" style="height: 350px; width: 100%; border-radius: 6px; border: 2px solid #343a40; margin-bottom: 25px; background: #e0e0e0; z-index: 1;"></div>
 
 <div *ngIf="!assets || assets.length === 0">
-  <p style="color: blue; font-weight: bold;">Loading asset records from server...</p>
+  <p style="color: blue; font-weight: bold;">Initialising database stream components...</p>
 </div>
 
 <div *ngIf="assets && assets.length > 0">
   
-  <p style="color:green; font-weight: bold;">
-    DEBUG: {{ assets.length }} items loaded from database.
-  </p>
-
   <input
     type="text"
     placeholder="Search assets..."
@@ -40,7 +50,8 @@
         <th>Type</th>
         <th>Status</th>
         <th>Location</th>
-        <th>Actions Grid</th> </tr>
+        <th>Actions Grid</th>
+      </tr>
     </thead>
     <tbody>
       <tr *ngFor="let asset of filteredList; let i = index">
@@ -48,7 +59,7 @@
         <td><strong>{{ asset?.name }}</strong></td>
         <td>{{ asset?.type }}</td>
         <td>
-          <span [style.color]="asset?.status === 'Active' ? 'green' : asset?.status === 'Maintenance' ? 'orange' : 'gray'" style="font-weight: bold;">
+          <span [style.color]="asset?.status === 'Active' ? 'green' : asset?.status === 'Maintenance' ? 'red' : 'gray'" style="font-weight: bold;">
             {{ asset?.status }}
           </span>
         </td>
@@ -73,7 +84,7 @@
 <hr style="margin-top: 30px;">
 
 <h3>Add New Asset</h3>
-<div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd; border-radius: 4px;">
+<div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 30px;">
   <input placeholder="Name" [(ngModel)]="newAsset.name" style="padding: 6px; margin-right: 5px;">
   <input placeholder="Type" [(ngModel)]="newAsset.type" style="padding: 6px; margin-right: 5px;">
   
@@ -87,4 +98,18 @@
   <button (click)="addAsset()" style="background: green; color: white; padding: 7px 15px; border: none; cursor: pointer; border-radius: 3px; font-weight: bold;">
     Add Asset +
   </button>
+</div>
+
+<h3>🛡️ System Operations Audit History</h3>
+<div style="background: #1e1e1e; color: #ced4da; padding: 15px; border-radius: 6px; font-family: monospace; max-height: 250px; overflow-y: auto; border: 2px solid #343a40;">
+  <div *ngIf="logs.length === 0" style="color: #6c757d; font-style: italic;">
+    No logged interactions captured in current system lifecycle state.
+  </div>
+  <div *ngFor="let log of logs" style="margin-bottom: 8px; border-bottom: 1px solid #2d3139; padding-bottom: 4px;">
+    <span style="color: #6f42c1;">[{{ log.timestamp }}]</span> 
+    <span [style.color]="log.action === 'DECOMMISSION' ? '#dc3545' : log.action === 'DEPLOYMENT' ? '#28a745' : '#17a2b8'" style="font-weight: bold; margin-left: 5px;">
+      [{{ log.action }}]
+    </span>
+    <span style="color: #ffffff; margin-left: 10px;">{{ log.message }}</span>
+  </div>
 </div>
