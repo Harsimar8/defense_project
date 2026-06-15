@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "name": "Drone-X1",
+    "type": "Drone",
+    "status": "Active",
+    "location": "Delhi"
+  },
+  {
+    "id": 2,
+    "name": "Radar-A2",
+    "type": "Radar",
+    "status": "Maintenance",
+    "location": "Punjab"
+  },
+  {
+    "id": 3,
+    "name": "Crane-677",
+    "type": "Crane",
+    "status": "Active",
+    "location": "Mumbai"
+  },
+  {
+    "id": 4,
+    "name": "Bridge-89",
+    "type": "Bridge",
+    "status": "Maintenance",
+    "location": "Delhi"
+  },
+  {
+    "id": 1781521923281,
+    "name": "Aircraft-08",
+    "type": "airplane",
+    "status": "Standby",
+    "location": "Chandigarh"
+  },
+  {
+    "id": 1781522087214,
+    "name": "bridge",
+    "type": "23",
+    "status": "valid",
+    "location": "delhi"
+  },
+  {
+    "id": 1781522088052,
+    "name": "",
+    "type": "",
+    "status": "",
+    "location": ""
+  }
+]

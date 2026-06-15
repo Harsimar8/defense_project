@@ -1,0 +1,57 @@
+<h2>Defense Assets</h2>
+
+<p>Component Loaded ✔</p>
+
+<p style="color:red">
+  DEBUG LENGTH: {{ assets.length }}
+</p>
+<pre>{{ assets | json }}</pre>
+
+<input
+  type="text"
+  placeholder="Search assets..."
+  [(ngModel)]="searchText"
+/>
+
+<select [(ngModel)]="selectedStatus">
+  <option value="">All</option>
+
+  <option *ngFor="let s of uniqueStatuses" [value]="s">
+    {{ s }}
+  </option>
+</select>
+
+<div>
+  <h3>Total: {{ assets.length }}</h3>
+  <h3>Active: {{ getCount('Active') }}</h3>
+  <h3>Maintenance: {{ getCount('Maintenance') }}</h3>
+</div>
+
+<input placeholder="Name" [(ngModel)]="newAsset.name">
+<input placeholder="Type" [(ngModel)]="newAsset.type">
+<input placeholder="Status" [(ngModel)]="newAsset.status">
+<input placeholder="Location" [(ngModel)]="newAsset.location">
+
+<button (click)="addAsset()">Add</button>
+
+<table border="1" cellpadding="10">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Status</th>
+      <th>Location</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let asset of filteredList">
+      <td>{{ asset.id }}</td>
+      <td>{{ asset.name }}</td>
+      <td>{{ asset.type }}</td>
+      <td>{{ asset.status }}</td>
+      <td>{{ asset.location }}</td>
+    </tr>
+  </tbody>
+</table>
