@@ -1,57 +1,90 @@
 <h2>Defense Assets</h2>
-
 <p>Component Loaded ✔</p>
 
-<p style="color:red">
-  DEBUG LENGTH: {{ assets.length }}
-</p>
-<pre>{{ assets | json }}</pre>
-
-<input
-  type="text"
-  placeholder="Search assets..."
-  [(ngModel)]="searchText"
-/>
-
-<select [(ngModel)]="selectedStatus">
-  <option value="">All</option>
-
-  <option *ngFor="let s of uniqueStatuses" [value]="s">
-    {{ s }}
-  </option>
-</select>
-
-<div>
-  <h3>Total: {{ assets.length }}</h3>
-  <h3>Active: {{ getCount('Active') }}</h3>
-  <h3>Maintenance: {{ getCount('Maintenance') }}</h3>
+<div *ngIf="!assets || assets.length === 0">
+  <p style="color: blue; font-weight: bold;">Loading asset records from server...</p>
 </div>
 
-<input placeholder="Name" [(ngModel)]="newAsset.name">
-<input placeholder="Type" [(ngModel)]="newAsset.type">
-<input placeholder="Status" [(ngModel)]="newAsset.status">
-<input placeholder="Location" [(ngModel)]="newAsset.location">
+<div *ngIf="assets && assets.length > 0">
+  
+  <p style="color:green; font-weight: bold;">
+    DEBUG: {{ assets.length }} items loaded from database.
+  </p>
 
-<button (click)="addAsset()">Add</button>
+  <input
+    type="text"
+    placeholder="Search assets..."
+    [(ngModel)]="searchText"
+    style="padding: 6px; margin-right: 10px;"
+  />
 
-<table border="1" cellpadding="10">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Status</th>
-      <th>Location</th>
-    </tr>
-  </thead>
+  <select [(ngModel)]="selectedStatus" style="padding: 6px;">
+    <option value="">All Statuses</option>
+    <option *ngFor="let s of uniqueStatuses" [value]="s">
+      {{ s }}
+    </option>
+  </select>
 
-  <tbody>
-    <tr *ngFor="let asset of filteredList">
-      <td>{{ asset.id }}</td>
-      <td>{{ asset.name }}</td>
-      <td>{{ asset.type }}</td>
-      <td>{{ asset.status }}</td>
-      <td>{{ asset.location }}</td>
-    </tr>
-  </tbody>
-</table>
+  <div style="margin: 15px 0; background: #f4f4f4; padding: 10px; display: inline-block; border-radius: 4px;">
+    <strong>Total Assets:</strong> {{ assets.length }} | 
+    <strong>Active:</strong> {{ getCount('Active') }} | 
+    <strong>Maintenance:</strong> {{ getCount('Maintenance') }} |
+    <strong>Standby:</strong> {{ getCount('Standby') }}
+  </div>
+
+  <table border="1" cellpadding="10" style="width: 100%; margin-top: 15px; text-align: left; border-collapse: collapse;">
+    <thead style="background: #333; color: white;">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Location</th>
+        <th>Actions Grid</th> </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let asset of filteredList; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td><strong>{{ asset?.name }}</strong></td>
+        <td>{{ asset?.type }}</td>
+        <td>
+          <span [style.color]="asset?.status === 'Active' ? 'green' : asset?.status === 'Maintenance' ? 'orange' : 'gray'" style="font-weight: bold;">
+            {{ asset?.status }}
+          </span>
+        </td>
+        <td>{{ asset?.location }}</td>
+        <td>
+          <button (click)="toggleStatus(asset)" style="background: #007bff; color: white; border: none; padding: 5px 10px; margin-right: 5px; cursor: pointer; border-radius: 3px;">
+            Change Status 🔄
+          </button>
+          <button (click)="deleteAsset(asset.id)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px;">
+            Delete 🗑️
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="filteredList.length === 0">
+        <td colspan="6" style="text-align: center; color: gray;">No assets match your search filters.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<hr style="margin-top: 30px;">
+
+<h3>Add New Asset</h3>
+<div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd; border-radius: 4px;">
+  <input placeholder="Name" [(ngModel)]="newAsset.name" style="padding: 6px; margin-right: 5px;">
+  <input placeholder="Type" [(ngModel)]="newAsset.type" style="padding: 6px; margin-right: 5px;">
+  
+  <select [(ngModel)]="newAsset.status" style="padding: 6px; margin-right: 5px;">
+    <option value="Active">Active</option>
+    <option value="Maintenance">Maintenance</option>
+    <option value="Standby">Standby</option>
+  </select>
+
+  <input placeholder="Location" [(ngModel)]="newAsset.location" style="padding: 6px; margin-right: 5px;">
+  <button (click)="addAsset()" style="background: green; color: white; padding: 7px 15px; border: none; cursor: pointer; border-radius: 3px; font-weight: bold;">
+    Add Asset +
+  </button>
+</div>

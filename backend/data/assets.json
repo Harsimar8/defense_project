@@ -10,7 +10,7 @@
     "id": 2,
     "name": "Radar-A2",
     "type": "Radar",
-    "status": "Maintenance",
+    "status": "Active",
     "location": "Punjab"
   },
   {
@@ -35,17 +35,17 @@
     "location": "Chandigarh"
   },
   {
-    "id": 1781522087214,
-    "name": "bridge",
-    "type": "23",
-    "status": "valid",
-    "location": "delhi"
-  },
-  {
     "id": 1781522088052,
     "name": "",
     "type": "",
     "status": "",
     "location": ""
+  },
+  {
+    "id": 1781551321282,
+    "name": "Drone-134",
+    "type": "drone",
+    "status": "Active",
+    "location": "Banglore"
   }
 ]
