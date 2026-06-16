@@ -32,11 +32,67 @@
       "id": 5,
       "name": "Aircraft-08",
       "type": "airplane",
-      "status": "Standby",
+      "status": "Active",
       "location": "Chandigarh"
+    },
+    {
+      "id": 1781625198843,
+      "name": "xd",
+      "type": "submarine",
+      "status": "Active",
+      "location": "Jaipur"
+    },
+    {
+      "id": 1781627606967,
+      "name": "Cranee-112",
+      "type": "crane",
+      "status": "Active",
+      "location": "Kerala"
     }
   ],
   "logs": [
+    {
+      "id": 1781627633539,
+      "timestamp": "10:03:53 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Cranee-112\" adjusted status parameters from [Standby] to [Active]."
+    },
+    {
+      "id": 1781627606968,
+      "timestamp": "10:03:26 PM",
+      "action": "DEPLOYMENT",
+      "message": "New asset \"Cranee-112\" (crane) stationed at Kerala."
+    },
+    {
+      "id": 1781627553232,
+      "timestamp": "10:02:33 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Aircraft-08\" adjusted status parameters from [Standby] to [Active]."
+    },
+    {
+      "id": 1781627551580,
+      "timestamp": "10:02:31 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"xd\" adjusted status parameters from [Standby] to [Active]."
+    },
+    {
+      "id": 1781625276119,
+      "timestamp": "9:24:36 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"xd\" adjusted status parameters from [Maintenance] to [Standby]."
+    },
+    {
+      "id": 1781625275039,
+      "timestamp": "9:24:35 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"xd\" adjusted status parameters from [Active] to [Maintenance]."
+    },
+    {
+      "id": 1781625198844,
+      "timestamp": "9:23:18 PM",
+      "action": "DEPLOYMENT",
+      "message": "New asset \"xd\" (submarine) stationed at Jaipur."
+    },
     {
       "id": 1718476200000,
       "timestamp": "18:30:00",

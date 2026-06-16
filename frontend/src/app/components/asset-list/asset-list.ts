@@ -1,16 +1,26 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule ,} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AssetService } from '../../services/asset';
+import { AuthPortalComponent } from '../auth-portal/auth-portal';
+import { DataExportComponent } from '../data-export/data-export';
+
+
+// ✅ STEP 1: IMPORT THE DASHBOARD CHARTS COMPONENT SIGNATURE
+import { DashboardChartsComponent } from '../dashboard-charts/dashboard-charts';
 import * as L from 'leaflet';
 
 @Component({
   selector: 'app-asset-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  // ✅ STEP 2: REGISTER BOTH STANDALONE SUB-COMPONENTS IN THE IMPORTS ARRAY
+  imports: [CommonModule, FormsModule, AuthPortalComponent, DashboardChartsComponent, DataExportComponent],
   templateUrl: './asset-list.html'
 })
 export class AssetListComponent implements OnInit {
+
+  isLoggedIn: boolean = false;
+  activeUser: string = '';
 
   assets: any[] = [];
   logs: any[] = [];
@@ -19,13 +29,6 @@ export class AssetListComponent implements OnInit {
   
   private map!: L.Map; 
   private markerGroup!: L.LayerGroup; 
-
-  private locationCoords: { [key: string]: [number, number] } = {
-    'delhi': [28.6139, 77.2090],
-    'punjab': [31.1471, 75.3412],
-    'mumbai': [19.0760, 72.8777],
-    'chandigarh': [30.7333, 76.7794]
-  };
 
   newAsset: any = {
     name: '',
@@ -40,12 +43,33 @@ export class AssetListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Session structural parameters managed dynamically via AuthPortal notifications
+  }
+
+  onLoginValidated(username: string) {
+    this.isLoggedIn = true;
+    this.activeUser = username;
     this.loadAssets();
   }
 
-  // ✅ SAFE INITIALIZATION: Only runs once data arrives
+  logout() {
+    this.isLoggedIn = false;
+    this.activeUser = '';
+    sessionStorage.clear();
+    
+    if (this.map) {
+      this.map.remove();
+      (this.map as any) = null;
+    }
+  }
+
+  get maintenanceAlerts() {
+    if (!this.assets) return [];
+    return this.assets.filter(a => a && a.status === 'Maintenance');
+  }
+
   private initMap() {
-    if (this.map) return; // Prevent double initialization
+    if (this.map) return; 
 
     this.map = L.map('defenseMap', {
       center: [22.9734, 78.6568],
@@ -60,14 +84,37 @@ export class AssetListComponent implements OnInit {
     this.markerGroup = L.layerGroup().addTo(this.map);
   }
 
-  private updateMapMarkers() {
+  private async getCoordinates(locationName: string): Promise<[number, number] | null> {
+    if (!locationName || locationName.trim() === '') return null;
+
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationName.trim())},+India&limit=1`;
+      const response = await fetch(url, {
+        headers: { 'User-Agent': 'DefenseAssetManagerApp/1.0' }
+      });
+      const results = await response.json();
+
+      if (results && results.length > 0) {
+        const lat = parseFloat(results[0].lat);
+        const lon = parseFloat(results[0].lon);
+        return [lat, lon];
+      }
+      return null;
+    } catch (error) {
+      console.error(`Geocoding failed for: ${locationName}`, error);
+      return null;
+    }
+  }
+
+  private async updateMapMarkers() {
     if (!this.markerGroup) return;
     
     this.markerGroup.clearLayers();
 
-    this.assets.forEach(asset => {
-      const locKey = (asset.location || '').toLowerCase().trim();
-      const coords = this.locationCoords[locKey];
+    for (const asset of this.assets) {
+      if (!asset.location) continue;
+
+      const coords = await this.getCoordinates(asset.location);
 
       if (coords) {
         let markerColor = '#6c757d'; 
@@ -92,7 +139,7 @@ export class AssetListComponent implements OnInit {
 
         this.markerGroup.addLayer(marker);
       }
-    });
+    }
   }
 
   loadAssets() {
@@ -100,10 +147,8 @@ export class AssetListComponent implements OnInit {
       next: (data: any) => {
         this.assets = data?.assets || [];
         this.logs = data?.logs || [];
-        
         this.cdr.detectChanges(); 
         
-        // ✅ Setup map and markers safely AFTER data binds to HTML templates
         setTimeout(() => {
           this.initMap();
           this.updateMapMarkers();
@@ -111,11 +156,6 @@ export class AssetListComponent implements OnInit {
       },
       error: (err) => console.error("API ERROR:", err)
     });
-  }
-
-  get maintenanceAlerts() {
-    if (!this.assets) return [];
-    return this.assets.filter(a => a && a.status === 'Maintenance');
   }
 
   toggleStatus(asset: any) {
