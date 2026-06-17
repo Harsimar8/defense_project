@@ -1,0 +1,56 @@
+.log-container {
+  background: #1e1e1e;
+  color: #ced4da;
+  padding: 15px;
+  border-radius: 6px;
+  font-family: monospace;
+  max-height: 250px;
+  overflow-y: auto;
+  border: 2px solid #343a40;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.log-container h3 {
+  margin-top: 0;
+  color: white;
+}
+
+.log-item {
+  margin-bottom: 8px;
+  border-bottom: 1px solid #2d3139;
+  padding-bottom: 6px;
+  font-size: 13px;
+}
+
+.timestamp {
+  color: #9f7aea;
+  margin-right: 5px;
+}
+
+.action {
+  font-weight: bold;
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+/* Action colors */
+.action.DEPLOYMENT {
+  color: #28a745;
+}
+
+.action.DECOMMISSION {
+  color: #dc3545;
+}
+
+.action.UPDATE {
+  color: #17a2b8;
+}
+
+.message {
+  color: white;
+}
+
+.empty {
+  color: #6c757d;
+  font-style: italic;
+}

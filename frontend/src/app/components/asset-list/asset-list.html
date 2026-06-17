@@ -1,140 +1,78 @@
-<app-auth-portal *ngIf="!isLoggedIn" (loginSuccess)="onLoginValidated($event)"></app-auth-portal>
+<app-auth-portal
+  *ngIf="!isLoggedIn"
+  (loginSuccess)="onLoginValidated($event)">
+</app-auth-portal>
 
+<div *ngIf="isLoggedIn" class="dashboard">
 
-<div *ngIf="isLoggedIn" style="font-family: sans-serif; padding: 20px;">
-
-  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+  <!-- HEADER -->
+  <div class="header">
     <div>
-      <h2 style="margin: 0; color: #1a202c;">Defense Assets Management Grid</h2>
-      <p style="margin: 4px 0 0 0; color: #38a169; font-size: 13px; font-weight: bold;">
-        System Status: Secure ✔ | 🔒 Terminal Operator: {{ activeUser | uppercase }}
+      <h2>Defense Assets Management Grid</h2>
+      <p>
+        System Status: Secure ✔ |
+        Terminal Operator: {{ activeUser | uppercase }}
       </p>
     </div>
-    <button (click)="logout()" style="background: #e53e3e; color: white; border: none; padding: 10px 16px; font-weight: bold; font-family: monospace; cursor: pointer; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+
+    <button (click)="logout()">
       Secure Logout 🔓
     </button>
   </div>
 
-  <div *ngIf="maintenanceAlerts.length > 0" 
-       style="background: #fff3cd; border-left: 6px solid #ffc107; color: #856404; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
-    <h3 style="margin-top: 0; color: #dc3545;">⚠️ CRITICAL SECURITY NOTICE: ASSETS OFFLINE</h3>
-    <p style="margin: 0 0 10px 0;">The following systems require immediate operational attention or engineering maintenance:</p>
-    <ul style="margin: 0; padding-left: 20px;">
-      <li *ngFor="let alert of maintenanceAlerts" style="margin-bottom: 5px;">
-        <strong>🚨 {{ alert.name }}</strong> ({{ alert.type }}) located in <em>{{ alert.location }}</em> is currently down.
-      </li>
-    </ul>
-  </div>
- 
-  
-   <h3>📊 Operational Dashboard Analytics Matrix</h3>
+  <!-- ALERTS -->
+  <app-maintenance-alerts [assets]="assets"></app-maintenance-alerts>
+
+  <!-- DASHBOARD CHARTS -->
+  <h3>📊 Operational Dashboard Analytics Matrix</h3>
   <app-dashboard-charts [assetsList]="assets"></app-dashboard-charts>
 
+  <!-- MAP -->
   <h3>🌐 Command Center Geolocation Readiness Grid</h3>
-  <div id="defenseMap" style="height: 350px; width: 100%; border-radius: 6px; border: 2px solid #343a40; margin-bottom: 25px; background: #e0e0e0; z-index: 1;"></div>
-  
+  <app-defense-map [assets]="assets"></app-defense-map>
 
-  <div *ngIf="!assets || assets.length === 0">
-    <p style="color: blue; font-weight: bold;">Initialising database stream components...</p>
+  <!-- LOADING -->
+  <div *ngIf="!assets || assets.length === 0" class="loading">
+    Initialising database stream components...
   </div>
 
-  <div *ngIf="assets && assets.length > 0">
-    
-    <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-      <input
-        type="text"
-        placeholder="Search assets..."
-        [(ngModel)]="searchText"
-        style="padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; width: 250px;"
-      />
+  <!-- FILTER + EXPORT -->
+  <div *ngIf="assets && assets.length > 0" class="toolbar">
 
-      <select [(ngModel)]="selectedStatus" style="padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;">
-        <option value="">All Statuses</option>
-        <option *ngFor="let s of uniqueStatuses" [value]="s">
-          {{ s }}
-        </option>
-      </select>
+    <input
+      type="text"
+      placeholder="Search assets..."
+      [(ngModel)]="searchText"
+    />
 
-      <div style="background: #f4f4f4; padding: 8px 15px; border-radius: 4px; border: 1px solid #e2e8f0; font-size: 14px;">
-        <strong>Total Assets:</strong> {{ assets.length }} | 
-        <strong style="color: green;">Active:</strong> {{ getCount('Active') }} | 
-        <strong style="color: red;">Maintenance:</strong> {{ getCount('Maintenance') }} |
-        <strong style="color: gray;">Standby:</strong> {{ getCount('Standby') }}
-      </div>
-
-      <app-data-export [dataToExport]="filteredList"></app-data-export>
-    </div>
-
-    <table border="1" cellpadding="10" style="width: 100%; margin-top: 15px; text-align: left; border-collapse: collapse; border: 1px solid #cbd5e0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-      <thead style="background: #333; color: white;">
-        <tr>
-          <th style="padding: 12px;">ID</th>
-          <th style="padding: 12px;">Name</th>
-          <th style="padding: 12px;">Type</th>
-          <th style="padding: 12px;">Status</th>
-          <th style="padding: 12px;">Location</th>
-          <th style="padding: 12px;">Actions Grid</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let asset of filteredList; let i = index" style="background: #fff; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 12px;">{{ i + 1 }}</td>
-          <td style="padding: 12px;"><strong>{{ asset?.name }}</strong></td>
-          <td style="padding: 12px;">{{ asset?.type }}</td>
-          <td style="padding: 12px;">
-            <span [style.color]="asset?.status === 'Active' ? 'green' : asset?.status === 'Maintenance' ? 'red' : 'gray'" style="font-weight: bold;">
-              {{ asset?.status }}
-            </span>
-          </td>
-          <td style="padding: 12px;">{{ asset?.location }}</td>
-          <td style="padding: 12px;">
-            <button (click)="toggleStatus(asset)" style="background: #007bff; color: white; border: none; padding: 6px 12px; margin-right: 5px; cursor: pointer; border-radius: 3px; font-weight: bold;">
-              Change Status 🔄
-            </button>
-            <button (click)="deleteAsset(asset.id)" style="background: #dc3545; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 3px; font-weight: bold;">
-              Delete 🗑️
-            </button>
-          </td>
-        </tr>
-        <tr *ngIf="filteredList.length === 0">
-          <td colspan="6" style="text-align: center; color: gray; padding: 20px; font-style: italic;">No assets match your search filters.</td>
-        </tr>
-      </tbody>
-    </table>
-
-  </div>
-
-  <hr style="margin-top: 40px; border: 0; border-top: 1px solid #e2e8f0;">
-
-  <h3>Add New Asset</h3>
-  <div style="background: #f9f9f9; padding: 20px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 30px; display: flex; gap: 10px; flex-wrap: wrap;">
-    <input placeholder="Name" [(ngModel)]="newAsset.name" style="padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; flex: 1; min-width: 150px;">
-    <input placeholder="Type" [(ngModel)]="newAsset.type" style="padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; flex: 1; min-width: 150px;">
-    
-    <select [(ngModel)]="newAsset.status" style="padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; width: 140px;">
-      <option value="Active">Active</option>
-      <option value="Maintenance">Maintenance</option>
-      <option value="Standby">Standby</option>
+    <select [(ngModel)]="selectedStatus">
+      <option value="">All Statuses</option>
+      <option *ngFor="let s of uniqueStatuses" [value]="s">
+        {{ s }}
+      </option>
     </select>
 
-    <input placeholder="Location" [(ngModel)]="newAsset.location" style="padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; flex: 1; min-width: 150px;">
-    <button (click)="addAsset()" style="background: green; color: white; padding: 8px 20px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
-      Add Asset +
-    </button>
+    <div class="stats">
+      <strong>Total:</strong> {{ assets.length }} |
+      <span class="green">Active:</span> {{ getCount('Active') }} |
+      <span class="red">Maintenance:</span> {{ getCount('Maintenance') }} |
+      <span class="gray">Standby:</span> {{ getCount('Standby') }}
+    </div>
+
+    <app-data-export [dataToExport]="filteredList"></app-data-export>
   </div>
 
-  <h3>🛡️ System Operations Audit History</h3>
-  <div style="background: #1e1e1e; color: #ced4da; padding: 15px; border-radius: 6px; font-family: monospace; max-height: 250px; overflow-y: auto; border: 2px solid #343a40; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
-    <div *ngIf="logs.length === 0" style="color: #6c757d; font-style: italic;">
-      No logged interactions captured in current system lifecycle state.
-    </div>
-    <div *ngFor="let log of logs" style="margin-bottom: 8px; border-bottom: 1px solid #2d3139; padding-bottom: 6px; font-size: 13px;">
-      <span style="color: #9f7aea;">[{{ log.timestamp }}]</span> 
-      <span [style.color]="log.action === 'DECOMMISSION' ? '#dc3545' : log.action === 'DEPLOYMENT' ? '#28a745' : '#17a2b8'" style="font-weight: bold; margin-left: 5px;">
-        [{{ log.action }}]
-      </span>
-      <span style="color: #ffffff; margin-left: 10px;">{{ log.message }}</span>
-    </div>
-  </div>
+  <!-- TABLE -->
+  <app-asset-table
+    [assets]="filteredList"
+    (toggle)="toggleStatus($event)"
+    (delete)="deleteAsset($event)">
+  </app-asset-table>
+
+  <!-- FORM -->
+  <app-asset-form (add)="addAsset($event)"></app-asset-form>
+
+  <!-- LOGS -->
+  <app-asset-logs [logs]="logs"></app-asset-logs>
 
 </div>

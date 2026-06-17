@@ -1,1 +1,18 @@
-<p>maintenance-alerts works!</p>
+<div *ngIf="maintenanceAlerts.length > 0" class="alert-box">
+
+  <h3>⚠️ CRITICAL SECURITY NOTICE: ASSETS OFFLINE</h3>
+
+  <p>
+    The following systems require immediate operational attention:
+  </p>
+
+  <ul>
+    <li *ngFor="let alert of maintenanceAlerts">
+      <strong>🚨 {{ alert.name }}</strong>
+      ({{ alert.type }})
+      located in <em>{{ alert.location }}</em>
+      is currently down.
+    </li>
+  </ul>
+
+</div>

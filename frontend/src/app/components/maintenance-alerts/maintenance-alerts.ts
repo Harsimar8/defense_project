@@ -1,9 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-maintenance-alerts',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './maintenance-alerts.html',
-  styleUrl: './maintenance-alerts.css',
+  styleUrls: ['./maintenance-alerts.css']
 })
-export class MaintenanceAlerts {}
+export class MaintenanceAlertsComponent {
+
+  @Input() assets: any[] = [];
+
+  get maintenanceAlerts() {
+    if (!this.assets) return [];
+    return this.assets.filter(a => a && a.status === 'Maintenance');
+  }
+}

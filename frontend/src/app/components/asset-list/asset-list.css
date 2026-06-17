@@ -1,0 +1,70 @@
+.dashboard {
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  margin: 0;
+  color: #1a202c;
+}
+
+.header p {
+  margin: 4px 0 0 0;
+  color: #38a169;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.header button {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* TOOLBAR */
+.toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 15px 0;
+  align-items: center;
+}
+
+.toolbar input,
+.toolbar select {
+  padding: 8px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+}
+
+/* STATS */
+.stats {
+  background: #f4f4f4;
+  padding: 8px 15px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.green { color: green; }
+.red { color: red; }
+.gray { color: gray; }
+
+/* LOADING */
+.loading {
+  color: blue;
+  font-weight: bold;
+}

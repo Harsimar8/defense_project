@@ -1,0 +1,11 @@
+.map-wrapper {
+  margin-bottom: 25px;
+}
+
+#defenseMap {
+  height: 350px;
+  width: 100%;
+  border-radius: 6px;
+  border: 2px solid #343a40;
+  background: #e0e0e0;
+}

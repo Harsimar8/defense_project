@@ -1,1 +1,25 @@
-<p>asset-logs works!</p>
+<div class="log-container">
+
+  <h3>🛡️ System Operations Audit History</h3>
+
+  <div *ngIf="!logs || logs.length === 0" class="empty">
+    No logged interactions captured in current system lifecycle state.
+  </div>
+
+  <div *ngFor="let log of logs" class="log-item">
+
+    <span class="timestamp">
+      [{{ log.timestamp }}]
+    </span>
+
+    <span class="action" [ngClass]="log.action">
+      [{{ log.action }}]
+    </span>
+
+    <span class="message">
+      {{ log.message }}
+    </span>
+
+  </div>
+
+</div>

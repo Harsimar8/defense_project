@@ -1,9 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-asset-form',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './asset-form.html',
-  styleUrl: './asset-form.css',
+  styleUrls: ['./asset-form.css']
 })
-export class AssetForm {}
+export class AssetFormComponent {
+
+  @Output() add = new EventEmitter<any>();
+
+  newAsset = {
+    name: '',
+    type: '',
+    status: 'Active',
+    location: ''
+  };
+
+  onAdd() {
+    if (!this.newAsset.name || !this.newAsset.type || !this.newAsset.location) {
+      alert('Please fill all fields');
+      return;
+    }
+
+    this.add.emit(this.newAsset);
+
+    // reset form
+    this.newAsset = {
+      name: '',
+      type: '',
+      status: 'Active',
+      location: ''
+    };
+  }
+}

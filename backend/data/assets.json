@@ -53,11 +53,30 @@
       "id": 1781676486516,
       "name": "drone-33",
       "type": "drone",
-      "status": "Active",
+      "status": "Maintenance",
       "location": "Pakistan"
+    },
+    {
+      "id": 1781693818291,
+      "name": "dsfghj",
+      "type": "drone",
+      "status": "Active",
+      "location": "mumbai"
     }
   ],
   "logs": [
+    {
+      "id": 1781693818292,
+      "timestamp": "4:26:58 PM",
+      "action": "DEPLOYMENT",
+      "message": "New asset \"dsfghj\" (drone) stationed at mumbai."
+    },
+    {
+      "id": 1781684718742,
+      "timestamp": "1:55:18 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"drone-33\" adjusted status parameters from [Active] to [Maintenance]."
+    },
     {
       "id": 1781676486517,
       "timestamp": "11:38:06 AM",

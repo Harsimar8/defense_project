@@ -1,32 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AssetService {
 
+  private apiUrl = 'http://localhost:3000/assets';
+
   constructor(private http: HttpClient) {}
 
- 
-  addAsset(data: any) {
-  return this.http.post('http://localhost:3000/assets', data);
-}
-
-   getAssets() {
-  return this.http.get<any[]>(
+  getAssets(): Observable<{ assets: any[]; logs: any[] }> {
+  return this.http.get<{ assets: any[]; logs: any[] }>(
     `http://localhost:3000/assets?t=${Date.now()}`
   );
 }
 
-updateAsset(id: any, data: any) {
-    return this.http.put(`http://localhost:3000/assets/${id}`, data);
+  addAsset(data: any) {
+    return this.http.post(this.apiUrl, data);
   }
 
-  // ✅ NEW: Delete an asset from the database using its ID
+  updateAsset(id: any, data: any) {
+    return this.http.put(`${this.apiUrl}/${id}`, data);
+  }
+
   deleteAsset(id: any) {
-    return this.http.delete(`http://localhost:3000/assets/${id}`);
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
-
-
 }

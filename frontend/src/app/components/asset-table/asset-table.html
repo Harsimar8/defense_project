@@ -1,1 +1,62 @@
-<p>asset-table works!</p>
+<div class="table-container">
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Location</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let asset of assets; let i = index">
+
+        <td>{{ i + 1 }}</td>
+
+        <td><strong>{{ asset?.name }}</strong></td>
+
+        <td>{{ asset?.type }}</td>
+
+        <td>
+          <span
+            class="status"
+            [ngClass]="{
+              'active': asset?.status === 'Active',
+              'maintenance': asset?.status === 'Maintenance',
+              'standby': asset?.status === 'Standby'
+            }">
+            {{ asset?.status }}
+          </span>
+        </td>
+
+        <td>{{ asset?.location }}</td>
+
+        <td>
+          <button class="btn-update" (click)="onToggle(asset)">
+            Change 🔄
+          </button>
+
+          <button class="btn-delete" (click)="onDelete(asset.id)">
+            Delete 🗑️
+          </button>
+        </td>
+
+      </tr>
+
+      <tr *ngIf="assets.length === 0">
+        <td colspan="6" class="empty-row">
+          No assets found
+        </td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>

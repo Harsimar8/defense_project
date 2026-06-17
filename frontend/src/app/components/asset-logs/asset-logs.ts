@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-asset-logs',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './asset-logs.html',
-  styleUrl: './asset-logs.css',
+  styleUrls: ['./asset-logs.css']
 })
-export class AssetLogs {}
+export class AssetLogsComponent {
+
+  @Input() logs: any[] = [];
+}
