@@ -48,9 +48,34 @@
       "type": "crane",
       "status": "Active",
       "location": "Kerala"
+    },
+    {
+      "id": 1781676486516,
+      "name": "drone-33",
+      "type": "drone",
+      "status": "Active",
+      "location": "Pakistan"
     }
   ],
   "logs": [
+    {
+      "id": 1781676486517,
+      "timestamp": "11:38:06 AM",
+      "action": "DEPLOYMENT",
+      "message": "New asset \"drone-33\" (drone) stationed at Pakistan."
+    },
+    {
+      "id": 1781676470402,
+      "timestamp": "11:37:50 AM",
+      "action": "DECOMMISSION",
+      "message": "CRITICAL: Asset \"radar-456\" has been decommissioned and removed from system database."
+    },
+    {
+      "id": 1781676414605,
+      "timestamp": "11:36:54 AM",
+      "action": "DEPLOYMENT",
+      "message": "New asset \"radar-456\" (radar) stationed at Las Vegas."
+    },
     {
       "id": 1781627633539,
       "timestamp": "10:03:53 PM",
