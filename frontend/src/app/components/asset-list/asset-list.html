@@ -5,7 +5,6 @@
 
 <div *ngIf="isLoggedIn" class="dashboard">
 
-  <!-- HEADER -->
   <div class="header">
     <div>
       <h2>Defense Assets Management Grid</h2>
@@ -14,65 +13,58 @@
         Terminal Operator: {{ activeUser | uppercase }}
       </p>
     </div>
-
     <button (click)="logout()">
       Secure Logout 🔓
     </button>
   </div>
 
-  <!-- ALERTS -->
-  <app-maintenance-alerts [assets]="assets"></app-maintenance-alerts>
+  <app-maintenance-alerts [assets]="filteredList"></app-maintenance-alerts>
 
-  <!-- DASHBOARD CHARTS -->
-  <h3>📊 Operational Dashboard Analytics Matrix</h3>
-  <app-dashboard-charts [assetsList]="assets"></app-dashboard-charts>
+  <div *ngIf="isLoggedIn && assets.length === 0" class="loading">
+  Initialising database stream components...
+</div>
 
-  <!-- MAP -->
-  <h3>🌐 Command Center Geolocation Readiness Grid</h3>
-  <app-defense-map [assets]="assets"></app-defense-map>
+  <div *ngIf="assets && assets.length > 0">
+    
+    <h3>📊 Operational Dashboard Analytics Matrix</h3>
+    <app-dashboard-charts [assetsList]="filteredList"></app-dashboard-charts>
 
-  <!-- LOADING -->
-  <div *ngIf="!assets || assets.length === 0" class="loading">
-    Initialising database stream components...
-  </div>
+    <h3>🌐 Command Center Geolocation Readiness Grid</h3>
+    <app-defense-map [assets]="filteredList"></app-defense-map>
 
-  <!-- FILTER + EXPORT -->
-  <div *ngIf="assets && assets.length > 0" class="toolbar">
+    <div class="toolbar">
+      <input
+        type="text"
+        placeholder="Search assets..."
+        [(ngModel)]="searchText"
+      />
 
-    <input
-      type="text"
-      placeholder="Search assets..."
-      [(ngModel)]="searchText"
-    />
+      <select [(ngModel)]="selectedStatus">
+        <option value="">All Statuses</option>
+        <option *ngFor="let s of uniqueStatuses" [value]="s">
+          {{ s }}
+        </option>
+      </select>
 
-    <select [(ngModel)]="selectedStatus">
-      <option value="">All Statuses</option>
-      <option *ngFor="let s of uniqueStatuses" [value]="s">
-        {{ s }}
-      </option>
-    </select>
+      <div class="stats">
+        <strong>Total:</strong> {{ assets.length }} |
+        <span class="green">Active:</span> {{ getCount('Active') }} |
+        <span class="red">Maintenance:</span> {{ getCount('Maintenance') }} |
+        <span class="gray">Standby:</span> {{ getCount('Standby') }}
+      </div>
 
-    <div class="stats">
-      <strong>Total:</strong> {{ assets.length }} |
-      <span class="green">Active:</span> {{ getCount('Active') }} |
-      <span class="red">Maintenance:</span> {{ getCount('Maintenance') }} |
-      <span class="gray">Standby:</span> {{ getCount('Standby') }}
+      <app-data-export [dataToExport]="filteredList"></app-data-export>
     </div>
 
-    <app-data-export [dataToExport]="filteredList"></app-data-export>
+   <app-asset-table
+  [assets]="filteredList"
+  (toggle)="toggleStatus($event)"
+  (delete)="deleteAsset($event)">
+</app-asset-table>
+
   </div>
 
-  <!-- TABLE -->
-  <app-asset-table
-    [assets]="filteredList"
-    (toggle)="toggleStatus($event)"
-    (delete)="deleteAsset($event)">
-  </app-asset-table>
-
-  <!-- FORM -->
   <app-asset-form (add)="addAsset($event)"></app-asset-form>
-
-  <!-- LOGS -->
   <app-asset-logs [logs]="logs"></app-asset-logs>
-
+      
 </div>

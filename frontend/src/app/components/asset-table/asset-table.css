@@ -1,68 +1,26 @@
+/* BREAK-IT TEST: If you see this, the file is connected! */
 .table-container {
-  width: 100%;
-  margin-top: 15px;
+  width: 100% !important;
+  background-color: lightyellow !important;
+  border: 5px solid red !important;
 }
 
 table {
-  width: 100%;
-  text-align: left;
+  width: 100% !important;
   border-collapse: collapse;
-  border: 1px solid #cbd5e0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 thead {
-  background: #333;
-  color: white;
+  background: black !important;
 }
 
 th {
-  padding: 12px;
+  color: yellow !important;
+  padding: 20px !important;
+  text-transform: uppercase;
 }
 
 td {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-}
-
-.status {
-  font-weight: bold;
-}
-
-.status.active {
-  color: green;
-}
-
-.status.maintenance {
-  color: red;
-}
-
-.status.standby {
-  color: gray;
-}
-
-button {
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: 3px;
-  font-weight: bold;
-  margin-right: 5px;
-}
-
-.btn-update {
-  background: #007bff;
-  color: white;
-}
-
-.btn-delete {
-  background: #dc3545;
-  color: white;
-}
-
-.empty-row {
-  text-align: center;
-  color: gray;
-  padding: 20px;
-  font-style: italic;
+  padding: 15px !important;
+  border: 2px solid blue !important;
 }

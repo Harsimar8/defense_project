@@ -4,7 +4,7 @@
       "id": 1,
       "name": "Drone-X1",
       "type": "Drone",
-      "status": "Active",
+      "status": "Maintenance",
       "location": "Delhi"
     },
     {
@@ -18,7 +18,7 @@
       "id": 3,
       "name": "Crane-677",
       "type": "Crane",
-      "status": "Active",
+      "status": "Maintenance",
       "location": "Mumbai"
     },
     {
@@ -36,35 +36,242 @@
       "location": "Chandigarh"
     },
     {
-      "id": 1781625198843,
-      "name": "xd",
-      "type": "submarine",
+      "id": 1781723290040,
+      "name": "Bridge-000",
+      "type": "bridge",
       "status": "Active",
-      "location": "Jaipur"
-    },
-    {
-      "id": 1781627606967,
-      "name": "Cranee-112",
-      "type": "crane",
-      "status": "Active",
-      "location": "Kerala"
-    },
-    {
-      "id": 1781676486516,
-      "name": "drone-33",
-      "type": "drone",
-      "status": "Maintenance",
-      "location": "Pakistan"
-    },
-    {
-      "id": 1781693818291,
-      "name": "dsfghj",
-      "type": "drone",
-      "status": "Active",
-      "location": "mumbai"
+      "location": "Lucknow"
     }
   ],
   "logs": [
+    {
+      "id": 1781723296618,
+      "timestamp": "12:38:16 AM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Bridge-000\" adjusted status parameters from [Maintenance] to [Active]."
+    },
+    {
+      "id": 1781723290041,
+      "timestamp": "12:38:10 AM",
+      "action": "DEPLOYMENT",
+      "message": "New asset \"Bridge-000\" (bridge) stationed at Lucknow."
+    },
+    {
+      "id": 1781722801427,
+      "timestamp": "12:30:01 AM",
+      "action": "DECOMMISSION",
+      "message": "CRITICAL: Asset \"new submarine\" has been decommissioned and removed from system database."
+    },
+    {
+      "id": 1781722195368,
+      "timestamp": "12:19:55 AM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Crane-677\" adjusted status parameters from [Active] to [Maintenance]."
+    },
+    {
+      "id": 1781722173741,
+      "timestamp": "12:19:33 AM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Radar-A2\" adjusted status parameters from [Active] to [Maintenance]."
+    },
+    {
+      "id": 1781722167953,
+      "timestamp": "12:19:27 AM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Drone-X1\" adjusted status parameters from [Active] to [Maintenance]."
+    },
+    {
+      "id": 1781721452794,
+      "timestamp": "12:07:32 AM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"new submarine\" adjusted status parameters from [Maintenance] to [Active]."
+    },
+    {
+      "id": 1781721442452,
+      "timestamp": "12:07:22 AM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Radar-A2\" adjusted status parameters from [Maintenance] to [Active]."
+    },
+    {
+      "id": 1781721435695,
+      "timestamp": "12:07:15 AM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Drone-X1\" adjusted status parameters from [Maintenance] to [Active]."
+    },
+    {
+      "id": 1781720990443,
+      "timestamp": "11:59:50 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Aircraft-08\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781720813898,
+      "timestamp": "11:56:53 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Crane-677\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781720812184,
+      "timestamp": "11:56:52 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Crane-677\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781720103180,
+      "timestamp": "11:45:03 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Drone-X1\" adjusted status parameters from [Maintenance] to [Maintenance]."
+    },
+    {
+      "id": 1781720101422,
+      "timestamp": "11:45:01 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Drone-X1\" adjusted status parameters from [Maintenance] to [Maintenance]."
+    },
+    {
+      "id": 1781718695984,
+      "timestamp": "11:21:35 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"new submarine\" adjusted status parameters from [Active] to [Maintenance]."
+    },
+    {
+      "id": 1781718457816,
+      "timestamp": "11:17:37 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Drone-X1\" adjusted status parameters from [Active] to [Maintenance]."
+    },
+    {
+      "id": 1781717849964,
+      "timestamp": "11:07:29 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"new submarine\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781717848842,
+      "timestamp": "11:07:28 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"new submarine\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781717842147,
+      "timestamp": "11:07:22 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Crane-677\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781717832790,
+      "timestamp": "11:07:12 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Aircraft-08\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781717827754,
+      "timestamp": "11:07:07 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"new submarine\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781717820650,
+      "timestamp": "11:07:00 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"new submarine\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781717137297,
+      "timestamp": "10:55:37 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Drone-X1\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781717134144,
+      "timestamp": "10:55:34 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Drone-X1\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781717131755,
+      "timestamp": "10:55:31 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Drone-X1\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781717128591,
+      "timestamp": "10:55:28 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Drone-X1\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781707796024,
+      "timestamp": "8:19:56 PM",
+      "action": "DEPLOYMENT",
+      "message": "New asset \"new submarine\" (submrine) stationed at Manipur."
+    },
+    {
+      "id": 1781707774404,
+      "timestamp": "8:19:34 PM",
+      "action": "DECOMMISSION",
+      "message": "CRITICAL: Asset \"xd\" has been decommissioned and removed from system database."
+    },
+    {
+      "id": 1781707774063,
+      "timestamp": "8:19:34 PM",
+      "action": "DECOMMISSION",
+      "message": "CRITICAL: Asset \"Cranee-112\" has been decommissioned and removed from system database."
+    },
+    {
+      "id": 1781707768677,
+      "timestamp": "8:19:28 PM",
+      "action": "DECOMMISSION",
+      "message": "CRITICAL: Asset \"drone-33\" has been decommissioned and removed from system database."
+    },
+    {
+      "id": 1781707766579,
+      "timestamp": "8:19:26 PM",
+      "action": "DECOMMISSION",
+      "message": "CRITICAL: Asset \"dsfghj\" has been decommissioned and removed from system database."
+    },
+    {
+      "id": 1781706844502,
+      "timestamp": "8:04:04 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Cranee-112\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781706842027,
+      "timestamp": "8:04:02 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Cranee-112\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781706838270,
+      "timestamp": "8:03:58 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Cranee-112\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781706837268,
+      "timestamp": "8:03:57 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Cranee-112\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781706832521,
+      "timestamp": "8:03:52 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Cranee-112\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781706831263,
+      "timestamp": "8:03:51 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Cranee-112\" adjusted status parameters from [Active] to [Active]."
+    },
+    {
+      "id": 1781706830047,
+      "timestamp": "8:03:50 PM",
+      "action": "STATUS_SHIFT",
+      "message": "System \"Cranee-112\" adjusted status parameters from [Active] to [Active]."
+    },
     {
       "id": 1781693818292,
       "timestamp": "4:26:58 PM",

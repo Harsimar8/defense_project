@@ -1,5 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges,inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { GeocodeService } from '../../services/geocode'; // Adjust path if needed
+
 import * as L from 'leaflet';
 
 @Component({
@@ -9,20 +12,33 @@ import * as L from 'leaflet';
   templateUrl: './defense-map.html',
   styleUrls: ['./defense-map.css']
 })
-export class DefenseMapComponent implements OnChanges {
-
+export class DefenseMapComponent implements OnChanges, OnDestroy {
   @Input() assets: any[] = [];
+  private geoService = inject(GeocodeService);
 
   private map!: L.Map;
   private markerGroup!: L.LayerGroup;
+  private coordCache: { [key: string]: [number, number] } = {};
+  private isUpdating = false;
+  // Initialize with a default controller
+  private abortController: AbortController = new AbortController();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['assets']) {
-      setTimeout(() => {
-        this.initMap();
-        this.updateMarkers();
-      }, 100);
+      // 1. Cancel ongoing fetches for old data
+      this.abortController.abort();
+      
+      // 2. Create a new controller for the new data
+      this.abortController = new AbortController();
+
+      this.initMap();
+      this.updateMarkers();
     }
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup: Ensure no pending requests run after component is destroyed
+    this.abortController.abort();
   }
 
   private initMap() {
@@ -41,59 +57,84 @@ export class DefenseMapComponent implements OnChanges {
     this.markerGroup = L.layerGroup().addTo(this.map);
   }
 
-  private async getCoordinates(location: string): Promise<[number, number] | null> {
+  private async getCoordinates(location: string, signal: AbortSignal): Promise<[number, number] | null> {
     if (!location) return null;
+    if (this.coordCache[location]) return this.coordCache[location];
 
     try {
       const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)},India&limit=1`;
-
-      const res = await fetch(url, {
-        headers: { 'User-Agent': 'DefenseApp/1.0' }
+      const res = await fetch(url, { 
+        headers: { 'User-Agent': 'DefenseApp/1.0' },
+        signal 
       });
+
+      if (res.status === 429) return null; 
 
       const data = await res.json();
-
       if (data && data.length > 0) {
-        return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+        const coords: [number, number] = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+        this.coordCache[location] = coords;
+        return coords;
       }
-
-      return null;
-    } catch (err) {
-      console.error('Geocoding error:', err);
-      return null;
+    } catch (err: any) {
+      if (err.name !== 'AbortError') console.error('Geocoding error:', err);
     }
+    return null;
   }
 
-  private async updateMarkers() {
-    if (!this.markerGroup) return;
+   // Inside updateMarkers in defense-map.ts
+   private async updateMarkers(): Promise<void> {
+  // 1. Prevent concurrent runs of the update logic
+  if (this.isUpdating || !this.markerGroup) return;
+  this.isUpdating = true;
 
-    this.markerGroup.clearLayers();
+  try {
+    const currentAssetIds = new Set(this.assets.map(a => a.id));
 
-    for (const asset of this.assets) {
-      if (!asset.location) continue;
+    // 2. Remove markers for assets that no longer exist
+    this.markerGroup.eachLayer((layer: any) => {
+      if (layer.assetId && !currentAssetIds.has(layer.assetId)) {
+        this.markerGroup.removeLayer(layer);
+      }
+    });
 
-      const coords = await this.getCoordinates(asset.location);
+    // 3. Identify ONLY new assets not yet on the map
+    const existingMarkerIds = new Set<string>();
+    this.markerGroup.eachLayer((layer: any) => {
+      if (layer.assetId) existingMarkerIds.add(layer.assetId);
+    });
 
-      if (!coords) continue;
+    const assetsToProcess = this.assets.filter(a => !existingMarkerIds.has(a.id));
 
-      let color = '#6c757d';
-      if (asset.status === 'Active') color = '#28a745';
-      if (asset.status === 'Maintenance') color = '#dc3545';
+    // 4. Sequential processing (crucial to avoid flooding the API)
+    for (const asset of assetsToProcess) {
+      // Check if component was destroyed or data changed
+      if (this.abortController.signal.aborted) break;
 
-      const icon = L.divIcon({
-        html: `<div style="background:${color};width:12px;height:12px;border-radius:50%;border:2px solid white;"></div>`,
-        className: ''
-      });
+      // The Service queue ensures that even with multiple calls, 
+      // requests are spaced out by 1.5s.
+      const coords = await this.geoService.getCoordinates(asset.location);
 
-      const marker = L.marker(coords, { icon })
-        .bindPopup(`
-          <b>${asset.name}</b><br>
-          Type: ${asset.type}<br>
-          Status: ${asset.status}<br>
-          Location: ${asset.location}
-        `);
+      if (coords) {
+        const color = asset.status === 'Active' ? '#28a745' : 
+                      asset.status === 'Maintenance' ? '#dc3545' : '#6c757d';
+        
+        const icon = L.divIcon({
+          html: `<div style="background:${color};width:12px;height:12px;border-radius:50%;border:2px solid white;"></div>`,
+          className: ''
+        });
 
-      this.markerGroup.addLayer(marker);
+        const marker = L.marker(coords, { icon })
+          .bindPopup(`<b>${asset.name}</b><br>Status: ${asset.status}<br>Location: ${asset.location}`);
+        
+        marker.addTo(this.markerGroup);
+        (marker as any).assetId = asset.id;
+      }
     }
+  } catch (error) {
+    console.error('Error updating markers:', error);
+  } finally {
+    this.isUpdating = false;
   }
+}
 }

@@ -138,53 +138,91 @@ export class DashboardChartsComponent implements OnChanges, AfterViewInit, OnDes
           borderWidth: 1
         }]
       },
-      options: { 
-        responsive: true, 
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } } 
+      
+      options: {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { display: true, position: 'bottom' },
+    tooltip: {
+      enabled: true,
+      callbacks: {
+        label: (context: any) => {
+          const val = context.parsed;
+          const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+          const pct = ((val / total) * 100).toFixed(1);
+          return `${context.label}: ${val} (${pct}%)`;
+        }
       }
+    }
+  }
+}
     });
   }
 
   private buildTypePieChart() {
-    if (this.typeChart) this.typeChart.destroy();
-    const map = this.assetsList.reduce((acc: any, c) => { if (c.type) acc[c.type] = (acc[c.type] || 0) + 1; return acc; }, {});
-    const canvas = document.getElementById('typePieChart') as HTMLCanvasElement;
-    if (!canvas) return;
+  if (this.typeChart) this.typeChart.destroy();
+  const map = this.assetsList.reduce((acc: any, c) => { if (c.type) acc[c.type] = (acc[c.type] || 0) + 1; return acc; }, {});
+  const canvas = document.getElementById('typePieChart') as HTMLCanvasElement;
+  if (!canvas) return;
 
-    this.typeChart = new Chart<any, any>(canvas, {
-      type: 'pie',
-      data: { 
-        labels: Object.keys(map).length ? Object.keys(map) : ['None'], 
-        datasets: [{ data: Object.values(map).length ? Object.values(map) : [0], backgroundColor: ['#3182ce', '#dd6b20', '#805ad5', '#319795', '#ecc94b'], borderWidth: 1 }] 
-      },
-      options: { 
-        responsive: true, 
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } } 
-      }
-    });
-  }
+  this.typeChart = new Chart<any, any>(canvas, {
+    type: 'pie',
+    data: { 
+      labels: Object.keys(map).length ? Object.keys(map) : ['None'], 
+      datasets: [{ data: Object.values(map).length ? Object.values(map) : [0], backgroundColor: ['#3182ce', '#dd6b20', '#805ad5', '#319795', '#ecc94b'], borderWidth: 1 }] 
+    },
+    options: { 
+      responsive: true, 
+      maintainAspectRatio: false,
+      plugins: { 
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              const val = context.parsed;
+              const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+              const pct = ((val / total) * 100).toFixed(1);
+              return `${context.label}: ${val} (${pct}%)`;
+            }
+          }
+        }
+      } 
+    }
+  });
+}
 
   private buildLocationPieChart() {
-    if (this.locationChart) this.locationChart.destroy();
-    const map = this.assetsList.reduce((acc: any, c) => { if (c.location) acc[c.location] = (acc[c.location] || 0) + 1; return acc; }, {});
-    const canvas = document.getElementById('locationPieChart') as HTMLCanvasElement;
-    if (!canvas) return;
+  if (this.locationChart) this.locationChart.destroy();
+  const map = this.assetsList.reduce((acc: any, c) => { if (c.location) acc[c.location] = (acc[c.location] || 0) + 1; return acc; }, {});
+  const canvas = document.getElementById('locationPieChart') as HTMLCanvasElement;
+  if (!canvas) return;
 
-    this.locationChart = new Chart<any, any>(canvas, {
-      type: 'pie',
-      data: { 
-        labels: Object.keys(map).length ? Object.keys(map) : ['None'], 
-        datasets: [{ data: Object.values(map).length ? Object.values(map) : [0], backgroundColor: ['#ecc94b', '#4a5568', '#319795', '#e53e3e', '#38a169'], borderWidth: 1 }] 
-      },
-      options: { 
-        responsive: true, 
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } } 
-      }
-    });
-  }
+  this.locationChart = new Chart<any, any>(canvas, {
+    type: 'pie',
+    data: { 
+      labels: Object.keys(map).length ? Object.keys(map) : ['None'], 
+      datasets: [{ data: Object.values(map).length ? Object.values(map) : [0], backgroundColor: ['#ecc94b', '#4a5568', '#319795', '#e53e3e', '#38a169'], borderWidth: 1 }] 
+    },
+    options: { 
+      responsive: true, 
+      maintainAspectRatio: false,
+      plugins: { 
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              const val = context.parsed;
+              const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+              const pct = ((val / total) * 100).toFixed(1);
+              return `${context.label}: ${val} (${pct}%)`;
+            }
+          }
+        }
+      } 
+    }
+  });
+}
 
   ngOnDestroy() {
     if (this.statusChart) this.statusChart.destroy();

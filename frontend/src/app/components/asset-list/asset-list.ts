@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -19,11 +19,9 @@ import { AssetTableComponent } from '../asset-table/asset-table';
   imports: [
     CommonModule,
     FormsModule,
-
     AuthPortalComponent,
     DashboardChartsComponent,
     DataExportComponent,
-
     MaintenanceAlertsComponent,
     AssetLogsComponent,
     AssetFormComponent,
@@ -33,7 +31,7 @@ import { AssetTableComponent } from '../asset-table/asset-table';
   templateUrl: './asset-list.html',
   styleUrls: ['./asset-list.css']
 })
-export class AssetListComponent implements OnInit{
+export class AssetListComponent implements OnInit {
 
   isLoggedIn = false;
   activeUser = '';
@@ -44,29 +42,32 @@ export class AssetListComponent implements OnInit{
   searchText = '';
   selectedStatus = '';
 
-  ngOnInit() {
-  const sessionActive = sessionStorage.getItem('active_defense_session');
-  const user = sessionStorage.getItem('session_user');
+  // Inject ChangeDetectorRef to force UI refresh
+  constructor(
+    private assetService: AssetService,
+    private cdr: ChangeDetectorRef 
+  ) {}
 
-  if (sessionActive === 'true' && user) {
+  ngOnInit() {
+    const sessionActive = sessionStorage.getItem('active_defense_session');
+    const user = sessionStorage.getItem('session_user');
+
+    if (sessionActive === 'true' && user) {
+      this.isLoggedIn = true;
+      this.activeUser = user;
+      this.loadAssets();
+    }
+  }
+
+  onLoginValidated(username: string) {
     this.isLoggedIn = true;
-    this.activeUser = user;
+    this.activeUser = username;
+
+    sessionStorage.setItem('active_defense_session', 'true');
+    sessionStorage.setItem('session_user', username);
 
     this.loadAssets();
   }
-}
-
-  constructor(private assetService: AssetService) {}
-
-  onLoginValidated(username: string) {
-  this.isLoggedIn = true;
-  this.activeUser = username;
-
-  sessionStorage.setItem('active_defense_session', 'true');
-  sessionStorage.setItem('session_user', username);
-
-  this.loadAssets();
-}
 
   logout() {
     this.isLoggedIn = false;
@@ -76,26 +77,48 @@ export class AssetListComponent implements OnInit{
   }
 
   loadAssets() {
-  this.assetService.getAssets().subscribe({
-    next: (data) => {
-      console.log('Assets:', data);
-      this.assets = data?.assets ?? [];
-this.logs = data?.logs ?? [];
-    },
-    error: (err) => {
-      console.error(err);
-      this.assets = [];
-      this.logs = [];
-    }
-  });
-}
+    this.assetService.getAssets().subscribe({
+      next: (data: any) => {
+        console.log('Full Response Received:', data);
+
+        if (Array.isArray(data)) {
+          this.assets = data;
+        } else if (data && data.assets) {
+          this.assets = data.assets;
+          this.logs = data.logs || [];
+        }
+
+        console.log('Final Assets State:', this.assets);
+        
+        // CRITICAL: Tell Angular to detect changes after data is loaded
+        this.cdr.detectChanges(); 
+      },
+      error: (err) => console.error('Fetch Error:', err)
+    });
+  }
+
   addAsset(asset: any) {
     this.assetService.addAsset(asset).subscribe(() => this.loadAssets());
   }
 
-  toggleStatus(asset: any) {
-    this.assetService.updateAsset(asset.id, asset).subscribe(() => this.loadAssets());
-  }
+  // In asset-list.ts
+  // In asset-list.ts
+toggleStatus(asset: any) {
+  const originalStatus = asset.status;
+  // Instant visual update
+  asset.status = (asset.status === 'Active') ? 'Maintenance' : 'Active';
+  
+  // Force Change Detection for immediate UI refresh
+  this.cdr.markForCheck(); 
+
+  this.assetService.updateAsset(asset.id, asset).subscribe({
+    error: (err) => {
+      console.error('Update failed:', err);
+      asset.status = originalStatus; // Revert if failed
+      this.cdr.markForCheck();
+    }
+  });
+}
 
   deleteAsset(id: any) {
     this.assetService.deleteAsset(id).subscribe(() => this.loadAssets());
